@@ -1,3 +1,6 @@
+
+// Import terminal-kit for enhanced terminal graphics
+const term = require('terminal-kit').terminal;
 const prompt = require('prompt-sync')({sigint: true});
 
 const hat = '^';
@@ -50,18 +53,18 @@ class Field {
         
         // Check bounds
         if (newRow < 0 || newRow >= this.field.length || newCol < 0 || newCol >= this.field[0].length){
-            console.log('Out of bounds!');
+            term.red('Out of bounds!\n');
             return;//if the new position is outside the field, print a message and return without updating the position
         }
         
         //checks to see if new position lands on a hat
         if(this.field[newRow][newCol] === hat){
-            console.log('Found Hat!');
+            term.green('you win\n');
             process.exit();
         }
                 //checks to see if new position lands on a hole
             if(this.field[newRow][newCol] === hole){//if the new position is a hole, print a message and return without updating the position
-            console.log('Hole!, your dead');
+            term.red('Hole!, your dead\n');
             process.exit();
         }
 
@@ -73,8 +76,19 @@ class Field {
 
     }
     print(){
-        for (let row of this.field) {//for each row in the field array
-            console.log(row.join(''));//join the elements of the row into a string and print it
+        for (let row of this.field) {
+            for (let cell of row) {
+                if (cell === this.playerChar) {
+                    term.yellow(cell);
+                } else if (cell === hat) {
+                    term.green(cell);
+                } else if (cell === hole) {
+                    term.red(cell);
+                } else {
+                    term.cyan(cell);
+                }
+            }
+            term('\n');
         }
     }
 
